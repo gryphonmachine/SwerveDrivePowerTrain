@@ -31,6 +31,7 @@ public final class Constants {
 
     public static final class DriveConstants {
 
+        public static final int kRobotWeight = 40;
         public static final double kTrackWidth = Units.inchesToMeters(22);
         // Distance between right and left wheels
         public static final double kWheelBase = Units.inchesToMeters(22);

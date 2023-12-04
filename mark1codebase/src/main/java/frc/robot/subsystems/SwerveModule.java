@@ -5,8 +5,11 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -14,6 +17,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule {
 
+    private final String moduleName;
     private final CANSparkMax driveMotor;
     private final CANSparkMax turnMotor;
 
@@ -26,8 +30,9 @@ public class SwerveModule {
     private final boolean canReverse;
     private final double canOffset;
 
-    public SwerveModule(int driveMotorID, int turnMotorID, boolean driveReverse, boolean turnReverse, int canCoderID, double canCoderOffset, boolean canCoderReverse ){
+    public SwerveModule(String name, int driveMotorID, int turnMotorID, boolean driveReverse, boolean turnReverse, int canCoderID, double canCoderOffset, boolean canCoderReverse ){
 
+        this.moduleName = name;
         this.canReverse = canCoderReverse;
         this.canOffset = canCoderOffset;
         canCoder = new CANCoder(canCoderID);
@@ -52,6 +57,12 @@ public class SwerveModule {
         restEncoders();
     }
 
+    public void update()
+    {
+        SmartDashboard.putNumber(moduleName + "Absolute Position" , canCoder.getAbsolutePosition());
+    }
+
+
 
     public double getDrivePosition() {
         return driveCoder.getPosition();
@@ -67,6 +78,11 @@ public class SwerveModule {
 
     public double getTurningVelocity() {
         return turnCoder.getVelocity();
+    }
+
+    public SwerveModulePosition getPosition()
+    {
+        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
     }
 
     public double getAbsoluteEncoder(){

@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,6 +15,7 @@ import com.kauailabs.navx.frc.*;
 public class Swerve extends SubsystemBase{
 
     private final SwerveModule frontLeft = new SwerveModule(
+            "FrontLeft",
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
             DriveConstants.kFrontLeftDriveEncoderReversed,
@@ -21,6 +25,7 @@ public class Swerve extends SubsystemBase{
             DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
     private final SwerveModule frontRight = new SwerveModule(
+            "FrontRight",
             DriveConstants.kFrontRightDriveMotorPort,
             DriveConstants.kFrontRightTurningMotorPort,
             DriveConstants.kFrontRightDriveEncoderReversed,
@@ -30,6 +35,7 @@ public class Swerve extends SubsystemBase{
             DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
 
     private final SwerveModule backLeft = new SwerveModule(
+            "BackLeft",
             DriveConstants.kBackLeftDriveMotorPort,
             DriveConstants.kBackLeftTurningMotorPort,
             DriveConstants.kBackLeftDriveEncoderReversed,
@@ -39,6 +45,7 @@ public class Swerve extends SubsystemBase{
             DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
 
     private final SwerveModule backRight = new SwerveModule(
+            "BackRight",
             DriveConstants.kBackRightDriveMotorPort,
             DriveConstants.kBackRightTurningMotorPort,
             DriveConstants.kBackRightDriveEncoderReversed,
@@ -58,10 +65,32 @@ public class Swerve extends SubsystemBase{
     }).start();
 }
 
+    
+    public SwerveModulePosition[] getModulePositions()
+    {
+        return new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()};
+    }
+
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
+
+    private final SwerveDriveOdometry odo = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getRotation2d(), getModulePositions());
 
     public void zeroHeading(){
         gyro.reset();
+    }
+
+    public void resetYaw()
+    {
+        gyro.zeroYaw();
+    }
+
+    public void calibrateGyro()
+    {
+        gyro.calibrate();
     }
 
     public double getHeading(){
@@ -69,15 +98,12 @@ public class Swerve extends SubsystemBase{
         return Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
-    public Rotation2d getRotation2d() {
-        return Rotation2d.fromDegrees(getHeading());
+    public Pose2d getOdometryMeters() {
+        return (odo.getPoseMeters());
     }
 
-    @Override
-
-    public void periodic()
-    {
-        SmartDashboard.putNumber("Robot Heading", getHeading());
+    public Rotation2d getRotation2d() {
+        return Rotation2d.fromDegrees(getHeading());
     }
 
     public void stopModules(){
@@ -96,5 +122,81 @@ public class Swerve extends SubsystemBase{
         backRight.setDesiredState(desiredStates[3]);
 
     }
+
+    public Pose2d getPose(){
+        return odo.getPoseMeters();
+    }
+
+    public void resetPose(Pose2d pose){
+        odo.resetPosition(getOdometryAngle(), getModulePositions(), pose);
+    }
+
+    public void resetPose(Pose2d pose, Rotation2d rot){
+        odo.resetPosition(rot, getModulePositions(), pose);
+    }
+
+    public Rotation2d getOdometryAngle(){
+        return(Rotation2d.fromDegrees(gyro.getYaw()));
+    }
+
+    public double getRobotDegrees(){
+        double rawValue = gyro.getAngle() % 360;
+        if (rawValue < 0.0){
+            return(rawValue + 360);
+        } else {
+            return(rawValue);
+        }
+    }
+
+    public void resetAllEncoders(){
+        frontLeft.restEncoders();;
+        frontRight.restEncoders();
+        backLeft.restEncoders();
+        backRight.restEncoders();
+    }
+
+    public double getRumble()
+    {
+        return gyro.getRawAccelX();
+    }
+
+    public double getRollChange(){
+        return gyro.getRawGyroY();
+    }
+
+    public double getRoll(){
+        return gyro.getRoll();
+    }
+
+    public double getForce()
+    {
+        return gyro.getRawAccelX()*9.8*DriveConstants.kRobotWeight;
+    }
     
+    @Override
+    public void periodic()
+    {
+        SmartDashboard.putNumber("Robot Heading", getHeading());
+        SmartDashboard.putString("Field Location", getPose().getTranslation().toString());
+        SmartDashboard.putNumber("ROBOT DEGREES NAVX", getRobotDegrees());
+        SmartDashboard.putString("ODOMETRY", odo.getPoseMeters().toString());
+        SmartDashboard.putString("Raw R2d ROBOT DEG", getOdometryAngle().toString());
+
+        SmartDashboard.putBoolean("Gyro Calibrating", gyro.isCalibrating());
+        SmartDashboard.putBoolean("Magnetic Issues", gyro.isMagneticDisturbance());
+        SmartDashboard.putBoolean("Magnetic Calibartion", gyro.isMagnetometerCalibrated());
+
+        SmartDashboard.putNumber("Robot Acceleration X", gyro.getRawAccelX());
+        SmartDashboard.putNumber("Robot Acceleration Y", gyro.getRawAccelY());
+        SmartDashboard.putNumber("Robot Force X Newtons", 57.0 * 9.8 * gyro.getRawAccelX());
+        SmartDashboard.putNumber("Robot Force X Pounds", (57.0 * 9.8 * gyro.getRawAccelX()) / 4.45);
+
+        SmartDashboard.putNumber("RAW ROLL", getRoll());
+        SmartDashboard.putNumber("RAW Y", getRollChange());
+
+        frontLeft.update();
+        frontRight.update();
+        backLeft.update();
+        backRight.update();
+    }
 }
