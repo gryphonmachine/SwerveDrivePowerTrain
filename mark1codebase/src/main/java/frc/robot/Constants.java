@@ -52,15 +52,15 @@ public final class Constants {
         public static final int kFrontRightTurningMotorPort = 14;
         public static final int kBackRightTurningMotorPort = 12;
 
-        public static final boolean kFrontLeftTurningEncoderReversed = false;
-        public static final boolean kBackLeftTurningEncoderReversed = true;
-        public static final boolean kFrontRightTurningEncoderReversed = true;
-        public static final boolean kBackRightTurningEncoderReversed = false;
+        public static final boolean kFrontLeftTurningEncoderReversed = false; 
+        public static final boolean kBackLeftTurningEncoderReversed = true; 
+        public static final boolean kFrontRightTurningEncoderReversed = true; 
+        public static final boolean kBackRightTurningEncoderReversed = false; 
 
-        public static final boolean kFrontLeftDriveEncoderReversed = true;
-        public static final boolean kBackLeftDriveEncoderReversed = true;
-        public static final boolean kFrontRightDriveEncoderReversed = false;
-        public static final boolean kBackRightDriveEncoderReversed = false;
+        public static final boolean kFrontLeftDriveEncoderReversed = false; 
+        public static final boolean kBackLeftDriveEncoderReversed = false; 
+        public static final boolean kFrontRightDriveEncoderReversed = false; //false
+        public static final boolean kBackRightDriveEncoderReversed = false; //fa;se
 
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 3;
         public static final int kBackLeftDriveAbsoluteEncoderPort = 4;
@@ -80,7 +80,7 @@ public final class Constants {
         public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
+        public static final double kTeleDriveMaxSpeedMetersPerSecond =  kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = 
         kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
