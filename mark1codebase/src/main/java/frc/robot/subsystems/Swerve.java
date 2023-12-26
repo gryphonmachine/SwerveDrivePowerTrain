@@ -194,9 +194,16 @@ public class Swerve extends SubsystemBase{
         SmartDashboard.putNumber("RAW ROLL", getRoll());
         SmartDashboard.putNumber("RAW Y", getRollChange());
 
+        SmartDashboard.putNumber("Turning Position:",frontLeft.getTurningPosition());
+
         frontLeft.update();
         frontRight.update();
         backLeft.update();
         backRight.update();
+
+        // System.out.println(backRight.getAbsoluteEncoder());
+        // System.out.println(DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad);
+
+        System.out.println(backLeft.getState());
     }
 }
