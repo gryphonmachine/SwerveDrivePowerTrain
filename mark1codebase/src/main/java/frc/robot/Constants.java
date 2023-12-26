@@ -53,8 +53,8 @@ public final class Constants {
         public static final int kBackRightTurningMotorPort = 12;
 
         public static final boolean kFrontLeftTurningEncoderReversed = false; 
-        public static final boolean kBackLeftTurningEncoderReversed = true; 
-        public static final boolean kFrontRightTurningEncoderReversed = true; 
+        public static final boolean kBackLeftTurningEncoderReversed = false; 
+        public static final boolean kFrontRightTurningEncoderReversed = false; 
         public static final boolean kBackRightTurningEncoderReversed = false; 
 
         public static final boolean kFrontLeftDriveEncoderReversed = false; 
@@ -67,17 +67,19 @@ public final class Constants {
         public static final int kFrontRightDriveAbsoluteEncoderPort = 2;
         public static final int kBackRightDriveAbsoluteEncoderPort = 1;
 
+
+        //should be inverted to the rotEncoder values
         public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = true;
         public static final boolean kBackLeftDriveAbsoluteEncoderReversed = true;
-        public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
+        public static final boolean kFrontRightDriveAbsoluteEncoderReversed = true;
         public static final boolean kBackRightDriveAbsoluteEncoderReversed = true;
 
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 0.676025;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 0.107422;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.186035;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 0.114014;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 1.086058397823034;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 3.689223794864967;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 4.224583089837056;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 3.8196121618352468;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 5;    
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond =  kPhysicalMaxSpeedMetersPerSecond / 4;

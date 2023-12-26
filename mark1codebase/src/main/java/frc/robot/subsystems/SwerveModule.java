@@ -43,7 +43,7 @@ public class SwerveModule {
         driveMotor.setInverted(driveReverse);
         turnMotor.setInverted(turnReverse);
 
-        turnPidController = new PIDController(0.6,0.0,0);
+        turnPidController = new PIDController(0.4,0.1,0.01);
         turnPidController.enableContinuousInput(-Math.PI, Math.PI);
 
         driveCoder = driveMotor.getEncoder();
@@ -69,7 +69,7 @@ public class SwerveModule {
     }
 
     public double getTurningPosition() {
-        return turnCoder.getPosition();
+        return getAbsoluteEncoder();
     }
 
     public double getDriveVelocity() {
@@ -82,13 +82,13 @@ public class SwerveModule {
 
     public SwerveModulePosition getPosition()
     {
-        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
+        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getAbsoluteEncoder()));
     }
 
     public double getAbsoluteEncoder(){
 
-        double angle = canCoder.getAbsolutePosition();
-        angle *= 2*Math.PI;
+        double angle = Math.toRadians(canCoder.getAbsolutePosition());
+        // angle *= (2*Math.PI)/180;
         angle -= canOffset;
 
         return angle*(canReverse ? -1.0 : 1.0);
@@ -97,12 +97,12 @@ public class SwerveModule {
     public void restEncoders(){
             
         driveCoder.setPosition(0);
-        turnCoder.setPosition(canOffset);
+        turnCoder.setPosition(getAbsoluteEncoder());
         }
 
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition())); 
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoder())); 
     }
 
     public void setDesiredState(SwerveModuleState state){
@@ -114,6 +114,7 @@ public class SwerveModule {
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turnMotor.set(turnPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+        
         // SmartDashboard.putString("Swerve[" + canCoder.configGetSensorDirection() null)
     }
 
