@@ -44,12 +44,15 @@ public class SwerveJoystick extends CommandBase{
     double ySpeed = ySpdFunction.get();
     double turningSpeed = turningSpdFunction.get();
 
+    System.out.println("PreX: " + xSpeed);
+    System.out.println("PreY: " + ySpeed);
+
     xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
     turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
-    xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-    ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
+    ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
     turningSpeed = turningLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
     ChassisSpeeds chassisSpeeds;
@@ -66,7 +69,8 @@ public class SwerveJoystick extends CommandBase{
 
     swerveSubsystem.setModuleState(moduleStates);
 
-
+      System.out.println("CurrentX: " + xSpeed);
+      System.out.println("CurrentY: " + ySpeed);
   }
 
   // Called once the command ends or is interrupted.

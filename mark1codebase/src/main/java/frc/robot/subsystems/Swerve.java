@@ -204,6 +204,6 @@ public class Swerve extends SubsystemBase{
         // System.out.println(backRight.getAbsoluteEncoder());
         // System.out.println(DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad);
 
-        System.out.println(backLeft.getState());
+        // System.out.println(backLeft.getState());
     }
 }
