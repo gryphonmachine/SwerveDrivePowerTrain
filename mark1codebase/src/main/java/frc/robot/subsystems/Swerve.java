@@ -176,6 +176,8 @@ public class Swerve extends SubsystemBase{
     @Override
     public void periodic()
     {
+        odo.update(getOdometryAngle(), getModulePositions());
+
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Field Location", getPose().getTranslation().toString());
         SmartDashboard.putNumber("ROBOT DEGREES NAVX", getRobotDegrees());
