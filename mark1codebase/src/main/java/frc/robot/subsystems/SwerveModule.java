@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -100,12 +101,23 @@ public class SwerveModule {
         turnCoder.setPosition(getAbsoluteEncoder());
         }
 
-
-    public SwerveModuleState getState(){
-        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoder())); 
+    public double getPowerDraw() {
+        return RobotController.getBatteryVoltage() * (driveMotor.getOutputCurrent() + turnMotor.getOutputCurrent());
     }
 
-    public void setDesiredState(SwerveModuleState state){
+    public double getDriveMotorTemp() {
+        return driveMotor.getMotorTemperature();
+    }
+
+    public double getTurnMotorTemp() {
+        return turnMotor.getMotorTemperature();
+    }
+
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoder()));
+    }
+
+    public void setDesiredState(SwerveModuleState state) {
 
         if (Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();
