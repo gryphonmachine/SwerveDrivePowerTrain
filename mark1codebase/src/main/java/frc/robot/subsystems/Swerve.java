@@ -12,7 +12,28 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import com.kauailabs.navx.frc.*;
 
-public class Swerve extends SubsystemBase{
+public class Swerve extends SubsystemBase {
+
+    private double robotHeading;
+
+    private double frontLeftPowerDraw;
+    private double frontRightPowerDraw;
+    private double backLeftPowerDraw;
+    private double backRightPowerDraw;
+
+    private double frontLeftFreeSpeed;
+    private double frontRightFreeSpeed;
+    private double backLeftFreeSpeed;
+    private double backRightFreeSpeed;
+
+    private double frontLeftDriveMotorTemp;
+    private double frontLeftTurnMotorTemp;
+    private double frontRightDriveMotorTemp;
+    private double frontRightTurnMotorTemp;
+    private double backLeftDriveMotorTemp;
+    private double backLeftTurnMotorTemp;
+    private double backRightDriveMotorTemp;
+    private double backRightTurnMotorTemp;
 
     private final SwerveModule frontLeft = new SwerveModule(
             "FrontLeft",
@@ -168,11 +189,27 @@ public class Swerve extends SubsystemBase{
         return gyro.getRoll();
     }
 
-    public double getForce()
-    {
-        return gyro.getRawAccelX()*9.8*DriveConstants.kRobotWeight;
+    public double getForce() {
+        return gyro.getRawAccelX() * 9.8 * DriveConstants.kRobotWeight;
     }
-    
+
+    public double[] getModuleMotorTemps() {
+        return new double[] { frontLeft.getDriveMotorTemp(), frontRight.getDriveMotorTemp(),
+                backLeft.getDriveMotorTemp(), backRight.getDriveMotorTemp(),
+                frontLeft.getTurnMotorTemp(), frontRight.getTurnMotorTemp(), backLeft.getTurnMotorTemp(),
+                backRight.getTurnMotorTemp() };
+    }
+
+    public double[] getModulePowerDraws() {
+        return new double[] { frontLeft.getPowerDraw(), frontRight.getPowerDraw(), backLeft.getPowerDraw(),
+                backRight.getPowerDraw() };
+    }
+
+    public double[] getModuleDriveVelocities() {
+        return new double[] { frontLeft.getDriveVelocity(), frontRight.getDriveVelocity(), backLeft.getDriveVelocity(),
+                backRight.getDriveVelocity() };
+    }
+
     @Override
     public void periodic()
     {
@@ -207,5 +244,27 @@ public class Swerve extends SubsystemBase{
         // System.out.println(DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad);
 
         // System.out.println(backLeft.getState());
+
+        robotHeading = getHeading();
+
+        frontLeftPowerDraw = frontLeft.getPowerDraw();
+        frontRightPowerDraw = frontRight.getPowerDraw();
+        backLeftPowerDraw = backLeft.getPowerDraw();
+        backRightPowerDraw = backRight.getPowerDraw();
+
+        frontLeftFreeSpeed = frontLeft.getDriveVelocity();
+        frontRightFreeSpeed = frontRight.getDriveVelocity();
+        backLeftFreeSpeed = backLeft.getDriveVelocity();
+        backRightFreeSpeed = backRight.getDriveVelocity();
+
+        frontLeftDriveMotorTemp = frontLeft.getDriveMotorTemp();
+        frontRightDriveMotorTemp = frontRight.getDriveMotorTemp();
+        backLeftDriveMotorTemp = backLeft.getDriveMotorTemp();
+        backRightDriveMotorTemp = backRight.getDriveMotorTemp();
+
+        frontLeftTurnMotorTemp = frontLeft.getTurnMotorTemp();
+        frontRightTurnMotorTemp = frontRight.getTurnMotorTemp();
+        backLeftTurnMotorTemp = backLeft.getTurnMotorTemp();
+        backRightTurnMotorTemp = backRight.getTurnMotorTemp();
     }
 }
