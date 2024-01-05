@@ -15,6 +15,7 @@ import com.kauailabs.navx.frc.*;
 public class Swerve extends SubsystemBase {
 
     private double robotHeading;
+    private double robotFreeSpeed;
 
     private double frontLeftPowerDraw;
     private double frontRightPowerDraw;
@@ -210,6 +211,11 @@ public class Swerve extends SubsystemBase {
                 backRight.getDriveVelocity() };
     }
 
+    public double getFreeSpeed() {
+        return (frontLeft.getDriveVelocity() + frontRight.getDriveVelocity() + backLeft.getDriveVelocity()
+                + backRight.getDriveVelocity()) / 4.0;
+    }
+
     @Override
     public void periodic()
     {
@@ -246,6 +252,8 @@ public class Swerve extends SubsystemBase {
         // System.out.println(backLeft.getState());
 
         robotHeading = getHeading();
+        robotFreeSpeed = (frontLeft.getDriveVelocity() + frontRight.getDriveVelocity() + backLeft.getDriveVelocity()
+                + backRight.getDriveVelocity()) / 4.0;
 
         frontLeftPowerDraw = frontLeft.getPowerDraw();
         frontRightPowerDraw = frontRight.getPowerDraw();
